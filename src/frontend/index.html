@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./css/index.css">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline';" />
+    <title>Commandante</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="container-fluid">
+        <hr>
+        <div class="btn-group">
+          <button class="btn" @click="abort()">
+            <span>Abort</span>
+          </button>
+          <button class="btn" v-for="shortcut in shortcuts" @click="sendCommand(shortcut.command)">
+            <span>{{ shortcut.label }}</span>
+          </button>
+        </div>
+        <hr>
+        <textarea id="uilogs"></textarea>
+        <form @submit="submitCommand">
+          <input id="uicommand" type="text" v-model="command">
+        </form>
+      </div>
+    </div>
+    <script src="./js/vue.min.js"></script>
+    <script>
+      new Vue({
+        el: '#app',
+        data: {
+          command: 'pwd',
+          shortcuts: [
+            { label: 'containers', command: 'docker ps -a'},
+            { label: 'images', command: 'docker images'},
+            { label: 'networks', command: 'docker network ls'},
+            { label: 'volumes', command: 'docker volume ls'}
+          ],
+          uilogs: null,
+          uicommand: null
+        },
+        mounted() {
+          this.uilogs = document.querySelector('#uilogs')
+          this.uicommand = document.querySelector('#uicommand')
+
+          window.api.on('logs', (event, message) => {
+            this.uilogs.value += message
+            this.uilogs.scrollTop = this.uilogs.scrollHeight
+          })
+        },
+        methods: {
+          sendCommand (command) {
+            console.log('command', command)
+            window.api.send('command', command)
+          },
+          sendAbort () {
+            window.api.send('abort')
+          },
+          submitCommand (e) {
+            e.preventDefault()
+            this.sendCommand(this.command)
+            this.command = ''
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

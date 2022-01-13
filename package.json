@@ -1,0 +1,56 @@
+{
+  "name": "youtube-downloader",
+  "description": "Download video and audio from youtube",
+  "author": "German Bisurgi <gebisurgi@protonmail.com>",
+  "version": "1.0.0",
+  "main": "./src/backend/index.js",
+  "repository": "git@github.com:germanbisurgi/electron-app.git",
+  "license": "MIT",
+  "scripts": {
+    "electron": "electron ./src/backend/index.js",
+    "build-all": "electron-builder build -mwl",
+    "build-linux": "electron-builder build -l",
+    "build-mac": "electron-builder build -m",
+    "build-win": "electron-builder build -w",
+    "postinstall": "electron-builder install-app-deps",
+    "eslint": "eslint ./src",
+    "eslint:fix": "eslint --fix ./src"
+  },
+  "build": {
+    "productName": "youtube-downloader",
+    "appId": "com.youtube-downloader",
+    "linux": {
+      "icon": "build/icons",
+      "category": "Utility",
+      "target": [
+        "deb"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "build/icon.png",
+      "category": "public.app-category.utility"
+    },
+    "win": {
+      "icon": "build/icons/icon.ico",
+      "target": "nsis"
+    }
+  },
+  "dependencies": {
+    "@json-editor/json-editor": "^2.6.1",
+    "electron-is-packaged": "^1.0.2",
+    "electron-root-path": "^1.0.16",
+    "tree-kill": "^1.2.2"
+  },
+  "devDependencies": {
+    "electron": "^16.0.5",
+    "electron-builder": "^22.14.5",
+    "eslint": "^8.5.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0"
+  }
+}
