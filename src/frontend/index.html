@@ -35,7 +35,8 @@
             { label: 'containers', command: 'docker ps -a'},
             { label: 'images', command: 'docker images'},
             { label: 'networks', command: 'docker network ls'},
-            { label: 'volumes', command: 'docker volume ls'}
+            { label: 'volumes', command: 'docker volume ls'},
+            { label: 'remove containers', command: 'docker ps -aq | xargs docker rm -f'}
           ],
           uilogs: null,
           uicommand: null
