@@ -1,39 +1,69 @@
 const { spawn } = require('child_process')
 const kill = require('tree-kill')
+const path = require('path')
+const os = require("os")
+const { app } = require('electron')
 
 const Commandante = function () {
   this.child = null
 }
 
+Commandante.prototype.log = function (message) {
+  this.onLogs(message + '\n\n')
+}
+
 Commandante.prototype.command = function (command, args, options) {
+  const com = this.sanitize(args[1])
+  const parts = com.split(' ')
+  console.log('parts', parts)
+
+  const home = path.join(app.getPath('home'))
+  let cwd = home
+  if (parts[0] === 'cd') {
+    if (!parts[1]) {
+      cwd = home
+    } else {
+      cwd = path.resolve(process.cwd(), parts[1])
+    }
+    process.chdir(cwd)
+  }
+
   this.child = spawn(command, args, options)
 
   this.child.stdout.on('data', (data) => {
-    this.onLogs(`${data}`)
+    this.log(`${data}`)
   })
 
   this.child.stderr.on('data', (data) => {
-    this.onLogs(`${data}`)
+    this.log(`${data}`)
   })
 
   this.child.on('error', (error) => {
-    this.onLogs(`error: ${error.message}`)
+    this.log(`error: ${error.message}`)
   })
 
   this.child.on('exit', (code, signal) => {
-    if (code) this.onLogs(`Process exit with code: ${code} \n`)
-    if (signal) this.onLogs(`Process killed with signal: ${signal} \n`)
-    this.onLogs('Done ✅ \n')
+    if (code) this.log(`Process exit with code: ${code}`)
+    if (signal) this.log(`Process killed with signal: ${signal}`)
+    // this.log('Done ✅')
     this.onExit()
   })
+
+  const user = os.userInfo().username
+  const folder = process.cwd().split('/').slice(-1)[0]
+  this.log(user + ':' + folder + ' ' + args[1])
 }
 
 Commandante.prototype.kill = function () {
   if (this.child) {
     kill(this.child.pid, 'SIGTERM', function (err) {
-      console.log('Killed process \n', err)
+      console.log('Killed process', err)
     })
   }
+}
+
+Commandante.prototype.sanitize = function (command) {
+  return command.replace(/ +(?= )/g,'')
 }
 
 Commandante.prototype.onLogs = function () {}

@@ -34,7 +34,8 @@ ipcMain.on('abort', () => {
 })
 
 ipcMain.on('command', (event, command) => {
-  console.log('command', command)
+  // todo
+  // commandante.command(command)
   commandante.command('bash', ['-c', command])
 })
 
