@@ -8,21 +8,22 @@
   </head>
   <body>
     <div id="app">
-      <div class="container-fluid">
-        <hr>
-        <div class="btn-group">
-          <button class="btn" @click="abort()">
-            <span>Abort</span>
-          </button>
-          <button class="btn" v-for="shortcut in shortcuts" @click="sendCommand(shortcut.command)">
-            <span>{{ shortcut.label }}</span>
-          </button>
+      <div class="flex-row">
+        <div class="flex-xs-3">
+          <nav class="sidenav">
+            <button class="btn" @click="abort()">Abort</button>
+            <button class="btn" v-for="shortcut in shortcuts" @click="sendCommand(shortcut.command)">{{ shortcut.label }}</button>
+          </nav>
         </div>
-        <hr>
-        <textarea id="uilogs"></textarea>
-        <form @submit="submitCommand">
-          <input id="uicommand" type="text" v-model="command">
-        </form>
+
+        <div class="flex-xs-9">
+          <div class="cli">
+            <textarea id="uilogs"></textarea>
+            <form class="cli-input" @submit="submitCommand">
+              <input id="uicommand" type="text" v-model="command">
+            </form>
+          </div>
+        </div>
       </div>
     </div>
     <script src="./js/vue.min.js"></script>
@@ -30,13 +31,12 @@
       new Vue({
         el: '#app',
         data: {
-          command: 'pwd',
+          command: '',
           shortcuts: [
             { label: 'containers', command: 'docker ps -a'},
             { label: 'images', command: 'docker images'},
             { label: 'networks', command: 'docker network ls'},
-            { label: 'volumes', command: 'docker volume ls'},
-            { label: 'remove containers', command: 'docker ps -aq | xargs docker rm -f'}
+            { label: 'volumes', command: 'docker volume ls'}
           ],
           uilogs: null,
           uicommand: null

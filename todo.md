@@ -1,0 +1,2 @@
+- commands have different color than stdout
+- a form of file navigation (cd)

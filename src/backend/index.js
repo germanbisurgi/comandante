@@ -34,9 +34,7 @@ ipcMain.on('abort', () => {
 })
 
 ipcMain.on('command', (event, command) => {
-  // todo
-  // commandante.command(command)
-  commandante.command('bash', ['-c', command])
+  commandante.command(command)
 })
 
 commandante.onLogs = (log) => {

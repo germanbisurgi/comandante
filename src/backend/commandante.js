@@ -12,7 +12,8 @@ Commandante.prototype.log = function (message) {
   this.onLogs(message + '\n\n')
 }
 
-Commandante.prototype.command = function (command, args, options) {
+Commandante.prototype.command = function (command) {
+  const args = ['-c', command]
   const com = this.sanitize(args[1])
   const parts = com.split(' ')
   console.log('parts', parts)
@@ -28,7 +29,7 @@ Commandante.prototype.command = function (command, args, options) {
     process.chdir(cwd)
   }
 
-  this.child = spawn(command, args, options)
+  this.child = spawn('bash', ['-c', command])
 
   this.child.stdout.on('data', (data) => {
     this.log(`${data}`)
@@ -45,7 +46,6 @@ Commandante.prototype.command = function (command, args, options) {
   this.child.on('exit', (code, signal) => {
     if (code) this.log(`Process exit with code: ${code}`)
     if (signal) this.log(`Process killed with signal: ${signal}`)
-    // this.log('Done ✅')
     this.onExit()
   })
 
