@@ -5,4 +5,4 @@
 - add/remove custom commands
 - improve readme
 - auto clean
-- multi plattform
+- multi platform
