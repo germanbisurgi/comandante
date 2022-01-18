@@ -1,7 +1,7 @@
 - form of file navigation (cd)
 - toggle sidenav
 - configurable font size
-- local storage prefferences
+- local storage preferences
 - add/remove custom commands
 - improve readme
 - auto clean
