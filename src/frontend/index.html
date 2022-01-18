@@ -8,29 +8,35 @@
   </head>
   <body>
     <div id="app">
-      <div class="flex-row">
-        <div class="flex-xs-3">
-          <nav class="sidenav">
-            <button class="btn" @click="abort()">Abort</button>
-            <button class="btn" v-for="shortcut in shortcuts" @click="sendCommand(shortcut.command)">{{ shortcut.label }}</button>
-          </nav>
-        </div>
+      <div class="flex-row flex-no-wrap">
+        <nav class="sidenav">
+          <button class="btn btn-block" v-for="shortcut in shortcuts" @click="sendCommand(shortcut.command)">{{ shortcut.label }}</button>
+          <button class="btn btn-block" @click="abort()">Abort</button>
+          <button class="btn btn-block" @click="clear()">Clear</button>
+          <div class="flex-row flex-between flex-middle">
+            <button class="btn" @click="decreasefontSize()">-</button>
+            <output>{{ fontSize }}</output>
+            <button class="btn" @click="increasefontSize()">+</button>
+          </div>
+        </nav>
 
-        <div class="flex-xs-9">
-          <form class="cli" @submit="submitCommand">
-            <div class="cli-logs">
-              <pre class="cli-log" :class="{ 'cli-log-promt': log.type === 'promt' }"  v-for="log in logs">{{ log.message }}</pre>
+        <form class="cli flex-grow" @submit="submitCommand">
+          <div class="cli-logs">
+            <div class="cli-log-container" v-for="log in logs">
+              <pre class="cli-log" :data-type="log.type" :style="{ fontSize: fontSize + 'px' }">{{ log.message }}</pre>
             </div>
-            <input class="cli-input" type="text" v-model="command">
-          </form>
-        </div>
+          </div>
+          <input class="cli-input" type="text" v-model="command">
+        </form>
       </div>
     </div>
     <script src="./js/vue.min.js"></script>
+    <script src="./js/local-storage.js"></script>
     <script>
       new Vue({
         el: '#app',
         data: {
+          localStorage: new LocalStorage(),
           command: '',
           shortcuts: [
             { label: 'containers', command: 'docker ps -a'},
@@ -38,27 +44,46 @@
             { label: 'networks', command: 'docker network ls'},
             { label: 'volumes', command: 'docker volume ls'}
           ],
-          logs: []
+          logs: [],
+          fontSize : 14
         },
         mounted() {
-          const cliLogs = document.querySelector('.cli-logs')
-
-          window.api.on('logs', (event, log) => {
-            this.logs.push(log)
-            cliLogs.scrollTop = cliLogs.scrollHeight
-          })
+          this.loadSettings()
+          this.registerEvents()
         },
         methods: {
+          loadSettings () {
+            this.fontSize = localStorage.getItem('font-size') || 14
+          },
+          registerEvents () {
+            const cliLogs = document.querySelector('.cli-logs')
+
+            window.api.on('logs', (event, log) => {
+              this.logs.push(log)
+              requestAnimationFrame(() => {
+                cliLogs.scrollTop = cliLogs.scrollHeight
+              })
+            })
+          },
           sendCommand (command) {
             window.api.send('command', command)
           },
           sendAbort () {
             window.api.send('abort')
           },
+          clear () {
+            this.logs = []
+          },
           submitCommand (e) {
             e.preventDefault()
             this.sendCommand(this.command)
             this.command = ''
+          },
+          increasefontSize () {
+            this.fontSize++
+          },
+          decreasefontSize () {
+            this.fontSize--
           }
         }
       })

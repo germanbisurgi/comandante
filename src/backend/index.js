@@ -38,7 +38,6 @@ ipcMain.on('command', (event, command) => {
 })
 
 commandante.onLogs = (log) => {
-  console.log('...', log)
   mainWindow.webContents.send('logs', log)
 }
 

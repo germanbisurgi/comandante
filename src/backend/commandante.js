@@ -31,6 +31,10 @@ Commandante.prototype.command = function (command) {
     process.chdir(cwd)
   }
 
+  if (parts[0] === 'clear') {
+    this.onClear()
+  }
+
   this.child = spawn('bash', ['-c', command])
 
   this.child.stdout.on('data', (data) => {
@@ -53,7 +57,7 @@ Commandante.prototype.command = function (command) {
 
   const user = os.userInfo().username
   const folder = process.cwd().split('/').slice(-1)[0]
-  this.log('promt', user + ':' + folder + ' ' + args[1])
+  this.log('prompt', user + ':' + folder + ' ' + args[1])
 }
 
 Commandante.prototype.kill = function () {
@@ -69,6 +73,7 @@ Commandante.prototype.sanitize = function (command) {
 }
 
 Commandante.prototype.onLogs = function () {}
+Commandante.prototype.onClear = function () {}
 Commandante.prototype.onExit = function () {}
 Commandante.prototype.onError = function () {}
 
