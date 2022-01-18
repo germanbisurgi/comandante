@@ -1,2 +1,4 @@
-- commands have different color than stdout
-- a form of file navigation (cd)
+- form of file navigation (cd)
+- toggle sidenav
+- configurable font size
+- local storage prefferences
