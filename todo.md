@@ -4,4 +4,4 @@
 - local storage prefferences
 - add/remove custom commands
 - improve readme
-
+- auto clean
