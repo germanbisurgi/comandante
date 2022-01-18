@@ -17,12 +17,12 @@
         </div>
 
         <div class="flex-xs-9">
-          <div class="cli">
-            <textarea id="uilogs"></textarea>
-            <form class="cli-input" @submit="submitCommand">
-              <input id="uicommand" type="text" v-model="command">
-            </form>
-          </div>
+          <form class="cli" @submit="submitCommand">
+            <div class="cli-logs">
+              <pre class="cli-log" :class="{ 'cli-log-promt': log.type === 'promt' }"  v-for="log in logs">{{ log.message }}</pre>
+            </div>
+            <input class="cli-input" type="text" v-model="command">
+          </form>
         </div>
       </div>
     </div>
@@ -38,21 +38,18 @@
             { label: 'networks', command: 'docker network ls'},
             { label: 'volumes', command: 'docker volume ls'}
           ],
-          uilogs: null,
-          uicommand: null
+          logs: []
         },
         mounted() {
-          this.uilogs = document.querySelector('#uilogs')
-          this.uicommand = document.querySelector('#uicommand')
+          const cliLogs = document.querySelector('.cli-logs')
 
-          window.api.on('logs', (event, message) => {
-            this.uilogs.value += message
-            this.uilogs.scrollTop = this.uilogs.scrollHeight
+          window.api.on('logs', (event, log) => {
+            this.logs.push(log)
+            cliLogs.scrollTop = cliLogs.scrollHeight
           })
         },
         methods: {
           sendCommand (command) {
-            console.log('command', command)
             window.api.send('command', command)
           },
           sendAbort () {

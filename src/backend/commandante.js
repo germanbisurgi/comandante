@@ -8,15 +8,17 @@ const Commandante = function () {
   this.child = null
 }
 
-Commandante.prototype.log = function (message) {
-  this.onLogs(message + '\n\n')
+Commandante.prototype.log = function (type, message) {
+  this.onLogs({
+    type: type,
+    message: message,
+  })
 }
 
 Commandante.prototype.command = function (command) {
   const args = ['-c', command]
   const com = this.sanitize(args[1])
   const parts = com.split(' ')
-  console.log('parts', parts)
 
   const home = path.join(app.getPath('home'))
   let cwd = home
@@ -32,26 +34,26 @@ Commandante.prototype.command = function (command) {
   this.child = spawn('bash', ['-c', command])
 
   this.child.stdout.on('data', (data) => {
-    this.log(`${data}`)
+    this.log('output', `${data}`)
   })
 
   this.child.stderr.on('data', (data) => {
-    this.log(`${data}`)
+    this.log('output', `${data}`)
   })
 
   this.child.on('error', (error) => {
-    this.log(`error: ${error.message}`)
+    this.log('output', `error: ${error.message}`)
   })
 
   this.child.on('exit', (code, signal) => {
-    if (code) this.log(`Process exit with code: ${code}`)
-    if (signal) this.log(`Process killed with signal: ${signal}`)
+    if (code) this.log('output', `Process exit with code: ${code}`)
+    if (signal) this.log('output', `Process killed with signal: ${signal}`)
     this.onExit()
   })
 
   const user = os.userInfo().username
   const folder = process.cwd().split('/').slice(-1)[0]
-  this.log(user + ':' + folder + ' ' + args[1])
+  this.log('promt', user + ':' + folder + ' ' + args[1])
 }
 
 Commandante.prototype.kill = function () {

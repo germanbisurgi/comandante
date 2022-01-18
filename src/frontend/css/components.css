@@ -38,13 +38,23 @@ textarea {
   position: relative;
 }
 
-#uilogs {
+.cli-logs {
   background: #000;
   color: #00ff41;
   font-size: 12px;
+  overflow: auto;
   padding: 15px;
   width: 100%;
   height: 100%;
+}
+
+.cli-log {
+  color: #fff;
+}
+
+.cli-log-promt {
+  color: #00ff41;
+  margin: 15px 0;
 }
 
 .cli-input {
