@@ -6,6 +6,8 @@ const { app } = require('electron')
 
 const Commandante = function () {
   this.child = null
+  this.cd = 'cd'
+  this.clear = 'clear'
 }
 
 Commandante.prototype.log = function (type, message) {
@@ -17,12 +19,12 @@ Commandante.prototype.log = function (type, message) {
 
 Commandante.prototype.command = function (command) {
   const args = ['-c', command]
-  const com = this.sanitize(args[1])
+  const com = this.sanitize(command)
   const parts = com.split(' ')
 
   const home = path.join(app.getPath('home'))
   let cwd = home
-  if (parts[0] === 'cd') {
+  if (parts[0] === this.cd) {
     if (!parts[1]) {
       cwd = home
     } else {
@@ -31,7 +33,7 @@ Commandante.prototype.command = function (command) {
     process.chdir(cwd)
   }
 
-  if (parts[0] === 'clear') {
+  if (parts[0] === this.clear) {
     this.onClear()
   }
 

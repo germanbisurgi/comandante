@@ -13,11 +13,10 @@
           <button class="btn btn-block" v-for="shortcut in shortcuts" @click="sendCommand(shortcut.command)">{{ shortcut.label }}</button>
           <button class="btn btn-block" @click="abort()">Abort</button>
           <button class="btn btn-block" @click="clear()">Clear</button>
-          <div class="flex-row flex-between flex-middle">
-            <button class="btn" @click="decreasefontSize()">-</button>
-            <output>{{ fontSize }}</output>
-            <button class="btn" @click="increasefontSize()">+</button>
-          </div>
+          <label for="font-size">Font Size</label>
+          <input id="font-size" type="range" min="10" max="20" step="1" v-model="fontSize" @change="saveSettings">
+          <label for="auto-clear">Auto Clear</label>
+          <input id="auto-clear" type="checkbox" v-model="autoClear"  @change="saveSettings">
         </nav>
 
         <form class="cli flex-grow" @submit="submitCommand">
@@ -45,15 +44,20 @@
             { label: 'volumes', command: 'docker volume ls'}
           ],
           logs: [],
-          fontSize : 14
+          fontSize : 14,
+          autoClear: false
+        },
+        created() {
+          this.loadSettings()
         },
         mounted() {
-          this.loadSettings()
           this.registerEvents()
         },
         methods: {
           loadSettings () {
+            console.log(localStorage.getItem('font-size'), localStorage.getItem('auto-clear'))
             this.fontSize = localStorage.getItem('font-size') || 14
+            this.autoClear = localStorage.getItem('auto-clear') || false
           },
           registerEvents () {
             const cliLogs = document.querySelector('.cli-logs')
@@ -64,11 +68,18 @@
                 cliLogs.scrollTop = cliLogs.scrollHeight
               })
             })
+
+            window.api.on('clear', (event) => {
+              this.clear()
+            })
           },
           sendCommand (command) {
+            if (this.autoClear) {
+              this.clear()
+            }
             window.api.send('command', command)
           },
-          sendAbort () {
+          abort () {
             window.api.send('abort')
           },
           clear () {
@@ -79,11 +90,9 @@
             this.sendCommand(this.command)
             this.command = ''
           },
-          increasefontSize () {
-            this.fontSize++
-          },
-          decreasefontSize () {
-            this.fontSize--
+          saveSettings () {
+            this.localStorage.setItem('font-size', this.fontSize)
+            this.localStorage.setItem('auto-clear', this.autoClear)
           }
         }
       })

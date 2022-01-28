@@ -41,6 +41,10 @@ commandante.onLogs = (log) => {
   mainWindow.webContents.send('logs', log)
 }
 
+commandante.onClear = () => {
+  mainWindow.webContents.send('clear')
+}
+
 commandante.onExit = () => {
   mainWindow.webContents.send('exit')
 }
