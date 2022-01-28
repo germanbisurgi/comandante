@@ -5,7 +5,7 @@ const os = require("os")
 const { app } = require('electron')
 
 const Commandante = function () {
-  this.child = null
+  this.process = null
   this.cd = 'cd'
   this.clear = 'clear'
 }
@@ -37,21 +37,21 @@ Commandante.prototype.command = function (command) {
     this.onClear()
   }
 
-  this.child = spawn('bash', ['-c', command])
+  this.process = spawn('bash', ['-c', command])
 
-  this.child.stdout.on('data', (data) => {
+  this.process.stdout.on('data', (data) => {
     this.log('output', `${data}`)
   })
 
-  this.child.stderr.on('data', (data) => {
+  this.process.stderr.on('data', (data) => {
     this.log('output', `${data}`)
   })
 
-  this.child.on('error', (error) => {
+  this.process.on('error', (error) => {
     this.log('output', `error: ${error.message}`)
   })
 
-  this.child.on('exit', (code, signal) => {
+  this.process.on('exit', (code, signal) => {
     if (code) this.log('output', `Process exit with code: ${code}`)
     if (signal) this.log('output', `Process killed with signal: ${signal}`)
     this.onExit()
@@ -63,9 +63,12 @@ Commandante.prototype.command = function (command) {
 }
 
 Commandante.prototype.kill = function () {
-  if (this.child) {
-    kill(this.child.pid, 'SIGTERM', function (err) {
-      console.log('Killed process', err)
+  if (this.process) {
+    kill(this.process.pid, 'SIGTERM', function (err) {
+      console.log('Killed process')
+      if (err) {
+        console.log(err)
+      }
     })
   }
 }

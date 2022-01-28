@@ -22,6 +22,7 @@ const createWindow = () => {
     }
   })
   mainWindow.loadFile(path.join(__dirname, '..', 'frontend', 'index.html'))
+  mainWindow.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {

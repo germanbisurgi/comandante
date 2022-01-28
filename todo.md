@@ -1,7 +1,6 @@
 - toggle sidenav
 - add/remove custom commands
 - improve readme
-- auto clean
 - multi platform
 - keyboard shortcuts
 - prompt before input

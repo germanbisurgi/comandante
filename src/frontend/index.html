@@ -10,19 +10,19 @@
     <div id="app">
       <div class="flex-row flex-no-wrap">
         <nav class="sidenav">
-          <button class="btn btn-block" v-for="shortcut in shortcuts" @click="sendCommand(shortcut.command)">{{ shortcut.label }}</button>
+          <button class="btn btn-block" :style="{ color: shortcut.color}" v-for="shortcut in shortcuts" @click="sendCommand(shortcut.command)">{{ shortcut.label }}</button>
           <button class="btn btn-block" @click="abort()">Abort</button>
           <button class="btn btn-block" @click="clear()">Clear</button>
           <label for="font-size">Font Size</label>
-          <input id="font-size" type="range" min="10" max="20" step="1" v-model="fontSize" @change="saveSettings">
+          <input id="font-size" type="range" min="10" max="20" step="1" v-model="store.state.fontSize" @change="saveSettings">
           <label for="auto-clear">Auto Clear</label>
-          <input id="auto-clear" type="checkbox" v-model="autoClear"  @change="saveSettings">
+          <input id="auto-clear" type="checkbox" v-model="store.state.autoClear"  @change="saveSettings">
         </nav>
 
         <form class="cli flex-grow" @submit="submitCommand">
           <div class="cli-logs">
             <div class="cli-log-container" v-for="log in logs">
-              <pre class="cli-log" :data-type="log.type" :style="{ fontSize: fontSize + 'px' }">{{ log.message }}</pre>
+              <pre class="cli-log" :data-type="log.type" :style="{ fontSize: store.state.fontSize + 'px' }">{{ log.message }}</pre>
             </div>
           </div>
           <input class="cli-input" type="text" v-model="command">
@@ -30,35 +30,43 @@
       </div>
     </div>
     <script src="./js/vue.min.js"></script>
-    <script src="./js/local-storage.js"></script>
+    <script src="./js/vuex.min.js"></script>
+    <script src="./js/storage.js"></script>
     <script>
+      storage = new Storage()
+      Vue.use(Vuex)
+
+      const store = new Vuex.Store({
+        state: {
+          fontSize : storage.getItem('font-size') ?? 11,
+          autoClear: storage.getItem('auto-clear') ?? true
+        },
+        mutations: {
+          saveSettings (state) {
+            storage.setItem('font-size', state.fontSize)
+            storage.setItem('auto-clear', state.autoClear)
+          }
+        }
+      })
+
       new Vue({
         el: '#app',
+        store: store,
         data: {
-          localStorage: new LocalStorage(),
           command: '',
           shortcuts: [
-            { label: 'containers', command: 'docker ps -a'},
-            { label: 'images', command: 'docker images'},
-            { label: 'networks', command: 'docker network ls'},
-            { label: 'volumes', command: 'docker volume ls'}
+            { label: 'containers', command: 'docker ps -a', color: 'black'},
+            { label: 'images', command: 'docker images', color: 'black'},
+            { label: 'networks', command: 'docker network ls', color: 'black'},
+            { label: 'volumes', command: 'docker volume ls', color: 'black'},
+            { label: 'prune', command: 'docker system prune -f', color: 'red'}
           ],
-          logs: [],
-          fontSize : 14,
-          autoClear: false
-        },
-        created() {
-          this.loadSettings()
-        },
+          logs: []
+        }
         mounted() {
           this.registerEvents()
         },
         methods: {
-          loadSettings () {
-            console.log(localStorage.getItem('font-size'), localStorage.getItem('auto-clear'))
-            this.fontSize = localStorage.getItem('font-size') || 14
-            this.autoClear = localStorage.getItem('auto-clear') || false
-          },
           registerEvents () {
             const cliLogs = document.querySelector('.cli-logs')
 
@@ -74,7 +82,7 @@
             })
           },
           sendCommand (command) {
-            if (this.autoClear) {
+            if (store.autoClear) {
               this.clear()
             }
             window.api.send('command', command)
@@ -91,8 +99,7 @@
             this.command = ''
           },
           saveSettings () {
-            this.localStorage.setItem('font-size', this.fontSize)
-            this.localStorage.setItem('auto-clear', this.autoClear)
+            this.$store.commit('saveSettings')
           }
         }
       })
