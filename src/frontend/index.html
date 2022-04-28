@@ -55,14 +55,15 @@
         data: {
           command: '',
           shortcuts: [
+            { label: 'remove all containers', command: 'docker ps -aq | xargs docker rm -f', color: 'red'},
             { label: 'containers', command: 'docker ps -a', color: 'black'},
-            { label: 'images', command: 'docker images', color: 'black'},
-            { label: 'networks', command: 'docker network ls', color: 'black'},
-            { label: 'volumes', command: 'docker volume ls', color: 'black'},
-            { label: 'prune', command: 'docker system prune -f', color: 'red'}
+            // { label: 'images', command: 'docker images', color: 'black'},
+            // { label: 'networks', command: 'docker network ls', color: 'black'},
+            // { label: 'volumes', command: 'docker volume ls', color: 'black'},
+            // { label: 'prune', command: 'docker system prune -f', color: 'red'}
           ],
           logs: []
-        }
+        },
         mounted() {
           this.registerEvents()
         },
