@@ -10,9 +10,7 @@ const createWindow = () => {
   const height = display.bounds.height
   mainWindow = new BrowserWindow({
     height: height,
-    width: 600,
-    x: width - 600,
-    y: 0,
+    width: width,
     icon: path.join(__dirname, '../assets/icons/png/icon.png'),
     webPreferences: {
       nodeIntegration: false,

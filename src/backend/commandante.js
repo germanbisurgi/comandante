@@ -37,7 +37,7 @@ Commandante.prototype.command = function (command) {
     this.onClear()
   }
 
-  this.process = spawn('bash', ['-c', command])
+  this.process = spawn('bash', ['-c', command], {env: process.env.PATH})
 
   this.process.stdout.on('data', (data) => {
     this.log('output', `${data}`)
@@ -55,6 +55,7 @@ Commandante.prototype.command = function (command) {
     if (code) this.log('output', `Process exit with code: ${code}`)
     if (signal) this.log('output', `Process killed with signal: ${signal}`)
     this.onExit()
+    this.log('output', 'done')
   })
 
   const user = os.userInfo().username
