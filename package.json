@@ -31,7 +31,7 @@
       "target": [
         "dmg"
       ],
-      "icon": "build/icon.png",
+      "icon": "build/icons/icon.png",
       "category": "public.app-category.utility"
     },
     "win": {
