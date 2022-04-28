@@ -2,6 +2,7 @@ const { spawn } = require('child_process')
 const kill = require('tree-kill')
 const path = require('path')
 const os = require("os")
+const deepmerge = require('deepmerge')
 const { app } = require('electron')
 
 const Commandante = function () {
@@ -17,7 +18,10 @@ Commandante.prototype.log = function (type, message) {
   })
 }
 
-Commandante.prototype.command = function (command) {
+Commandante.prototype.command = function (command, options = {}) {
+  const defaultOptions = { env: process.env.PATH }
+  const mergedOptions = deepmerge(defaultOptions, options)
+
   const args = ['-c', command]
   const com = this.sanitize(command)
   const parts = com.split(' ')
@@ -37,7 +41,7 @@ Commandante.prototype.command = function (command) {
     this.onClear()
   }
 
-  this.process = spawn('bash', ['-c', command], {env: process.env.PATH})
+  this.process = spawn('bash', ['-c', command], mergedOptions)
 
   this.process.stdout.on('data', (data) => {
     this.log('output', `${data}`)
