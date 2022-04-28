@@ -1,6 +1,6 @@
 {
-  "name": "youtube-downloader",
-  "description": "Download video and audio from youtube",
+  "name": "commandante",
+  "description": "Run predefined cli commands with one click",
   "author": "German Bisurgi <gebisurgi@protonmail.com>",
   "version": "1.0.0",
   "main": "./src/backend/index.js",
@@ -18,8 +18,8 @@
     "eslint:fix": "eslint --fix ./src"
   },
   "build": {
-    "productName": "youtube-downloader",
-    "appId": "com.youtube-downloader",
+    "productName": "commandante",
+    "appId": "com.commandante",
     "linux": {
       "icon": "build/icons",
       "category": "Utility",
