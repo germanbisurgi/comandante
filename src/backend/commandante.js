@@ -64,7 +64,7 @@ Commandante.prototype.command = function (command, options = {}) {
 
   const user = os.userInfo().username
   const folder = process.cwd().split('/').slice(-1)[0]
-  this.log('prompt', user + ':' + folder + ' ' + args[1])
+  this.log('prompt', user + ':' + folder + ' ' + command)
 }
 
 Commandante.prototype.kill = function () {
