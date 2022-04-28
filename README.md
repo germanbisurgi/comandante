@@ -13,13 +13,13 @@ Whith NPM
 
 ```
 npm install
-npm run electron
+npm run start
 ```
 or with Yarn
 
 ```
 yarn install
-yarn electron
+yarn start
 ```
 
 ## Build
