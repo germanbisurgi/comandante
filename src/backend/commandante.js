@@ -5,20 +5,20 @@ const os = require("os")
 const deepmerge = require('deepmerge')
 const { app } = require('electron')
 
-const Commandante = function () {
+const Comandante = function () {
   this.process = null
   this.cd = 'cd'
   this.clear = 'clear'
 }
 
-Commandante.prototype.log = function (type, message) {
+Comandante.prototype.log = function (type, message) {
   this.onLogs({
     type: type,
     message: message,
   })
 }
 
-Commandante.prototype.command = function (command, options = {}) {
+Comandante.prototype.command = function (command, options = {}) {
   const defaultOptions = { env: process.env.PATH }
   const mergedOptions = deepmerge(defaultOptions, options)
 
@@ -67,7 +67,7 @@ Commandante.prototype.command = function (command, options = {}) {
   this.log('prompt', user + ':' + folder + ' ' + command)
 }
 
-Commandante.prototype.kill = function () {
+Comandante.prototype.kill = function () {
   if (this.process) {
     kill(this.process.pid, 'SIGTERM', function (err) {
       console.log('Killed process')
@@ -78,15 +78,15 @@ Commandante.prototype.kill = function () {
   }
 }
 
-Commandante.prototype.sanitize = function (command) {
+Comandante.prototype.sanitize = function (command) {
   return command.replace(/ +(?= )/g,'')
 }
 
-Commandante.prototype.onLogs = function () {}
-Commandante.prototype.onClear = function () {}
-Commandante.prototype.onExit = function () {}
-Commandante.prototype.onError = function () {}
+Comandante.prototype.onLogs = function () {}
+Comandante.prototype.onClear = function () {}
+Comandante.prototype.onExit = function () {}
+Comandante.prototype.onError = function () {}
 
-const commandante = new Commandante()
+const comandante = new Comandante()
 
-module.exports = commandante
+module.exports = comandante

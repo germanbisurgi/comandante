@@ -1,21 +1,8 @@
-# commandante
+# Comandante
 
-CLI UI made with electron and Vue.js
-
-## Features
-
-- cli ui
-- cli shortcuts
+Execute command line commands through an Electron based UI.
 
 ## Installation and Starting for development
-
-Whith NPM
-
-```
-npm install
-npm run start
-```
-or with Yarn
 
 ```
 yarn install
@@ -29,12 +16,6 @@ This project uses [electron-builder](https://www.electron.build/) to package and
 The configuration schema can be found in the package.json under the `"build"` key.
 
 Scrips were added to the package.json file to trigger the build processes:
-
-```
-npm run build-linux
-npm run build-mac
-npm run build-win
-```
 
 ```
 yarn build-linux

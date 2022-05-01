@@ -1,4 +1,4 @@
-const commandante = require('./commandante')
+const comandante = require('./comandante')
 const path = require('path')
 const { app, BrowserWindow, ipcMain, screen } = require('electron')
 
@@ -29,21 +29,21 @@ app.whenReady().then(() => {
 })
 
 ipcMain.on('abort', () => {
-  commandante.kill()
+  comandante.kill()
 })
 
 ipcMain.on('command', (event, command) => {
-  commandante.command(command)
+  comandante.command(command)
 })
 
-commandante.onLogs = (log) => {
+comandante.onLogs = (log) => {
   mainWindow.webContents.send('logs', log)
 }
 
-commandante.onClear = () => {
+comandante.onClear = () => {
   mainWindow.webContents.send('clear')
 }
 
-commandante.onExit = () => {
+comandante.onExit = () => {
   mainWindow.webContents.send('exit')
 }

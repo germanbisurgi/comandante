@@ -1,5 +1,5 @@
 {
-  "name": "commandante",
+  "name": "comandante",
   "description": "Run predefined cli commands with one click",
   "author": "German Bisurgi <gebisurgi@protonmail.com>",
   "version": "1.0.0",
@@ -18,8 +18,8 @@
     "eslint:fix": "eslint --fix ./src"
   },
   "build": {
-    "productName": "commandante",
-    "appId": "com.commandante",
+    "productName": "comandante",
+    "appId": "com.comandante",
     "linux": {
       "icon": "build/icons",
       "category": "Utility",
