@@ -2,13 +2,13 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/main.css">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline';" />
     <title>Comandante</title>
   </head>
   <body>
     <div id="app">
-      <div class="flex-row flex-no-wrap">
+      <div class="container">
         <nav class="sidenav">
           <button class="btn btn-block" :style="{ color: command.color}" v-for="command in commands" @click="sendCommand(command.command)">{{ command.label }}</button>
           <button class="btn btn-block" @click="abort()">Abort</button>
@@ -18,13 +18,8 @@
           <label for="auto-clear">Auto Clear</label>
           <input id="auto-clear" type="checkbox" v-model="autoClear" @change="saveSettings">
         </nav>
-
-        <div class="cli flex-grow">
-          <div class="cli-logs flex-grow">
-            <div class="cli-log-container" v-for="log in logs">
-              <pre class="cli-log" :data-type="log.type" :style="{ fontSize: fontSize + 'px' }">{{ log.message }}</pre>
-            </div>
-          </div>
+        <div class="logs">
+          <pre class="log" v-for="log in logs" :data-type="log.type" :style="{ fontSize: fontSize + 'px' }">{{ log.message }}</pre>
         </div>
       </div>
     </div>
@@ -53,12 +48,12 @@
         },
         methods: {
           registerEvents () {
-            const cliLogs = document.querySelector('.cli-logs')
+            const logs = document.querySelector('.logs')
 
             window.api.on('logs', (event, log) => {
               this.logs.push(log)
               requestAnimationFrame(() => {
-                cliLogs.scrollTop = cliLogs.scrollHeight
+                logs.scrollTop = logs.scrollHeight
               })
             })
           },

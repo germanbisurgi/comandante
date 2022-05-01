@@ -1,3 +1,7 @@
+.container {
+  display: flex;
+}
+
 /* ------------------------------------------------------------------ sidenav */
 
 .sidenav {
@@ -30,25 +34,19 @@ textarea {
 
 /* ---------------------------------------------------------------------- cli */
 
-.cli {
-  position: relative;
-  height: 100vh;
-}
-
-.cli-logs {
+.logs {
   background: #000;
   color: #00ff41;
   overflow: auto;
   padding: 15px;
   width: 100%;
-  height: 95%;
 }
 
-.cli-log {
+.log {
   color: #fff;
 }
 
-.cli-log[data-type="prompt"] {
+.log[data-type="prompt"] {
   color: #00ff41;
   margin: 15px 0;
 }
