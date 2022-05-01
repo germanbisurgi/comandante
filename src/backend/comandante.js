@@ -1,45 +1,22 @@
 const { spawn } = require('child_process')
 const kill = require('tree-kill')
-const path = require('path')
-const os = require("os")
+const os = require('os')
 const deepmerge = require('deepmerge')
-const { app } = require('electron')
 
 const Comandante = function () {
   this.process = null
-  this.cd = 'cd'
-  this.clear = 'clear'
 }
 
 Comandante.prototype.log = function (type, message) {
   this.onLogs({
     type: type,
-    message: message,
+    message: message
   })
 }
 
 Comandante.prototype.command = function (command, options = {}) {
   const defaultOptions = { env: process.env.PATH }
   const mergedOptions = deepmerge(defaultOptions, options)
-
-  const args = ['-c', command]
-  const com = this.sanitize(command)
-  const parts = com.split(' ')
-
-  const home = path.join(app.getPath('home'))
-  let cwd = home
-  if (parts[0] === this.cd) {
-    if (!parts[1]) {
-      cwd = home
-    } else {
-      cwd = path.resolve(process.cwd(), parts[1])
-    }
-    process.chdir(cwd)
-  }
-
-  if (parts[0] === this.clear) {
-    this.onClear()
-  }
 
   this.process = spawn('bash', ['-c', command], mergedOptions)
 
@@ -78,12 +55,7 @@ Comandante.prototype.kill = function () {
   }
 }
 
-Comandante.prototype.sanitize = function (command) {
-  return command.replace(/ +(?= )/g,'')
-}
-
 Comandante.prototype.onLogs = function () {}
-Comandante.prototype.onClear = function () {}
 Comandante.prototype.onExit = function () {}
 Comandante.prototype.onError = function () {}
 

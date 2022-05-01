@@ -19,14 +19,13 @@
           <input id="auto-clear" type="checkbox" v-model="store.state.autoClear"  @change="saveSettings">
         </nav>
 
-        <form class="cli flex-grow" @submit="submitCommand">
-          <div class="cli-logs">
+        <div class="cli flex-grow">
+          <div class="cli-logs flex-grow">
             <div class="cli-log-container" v-for="log in logs">
               <pre class="cli-log" :data-type="log.type" :style="{ fontSize: store.state.fontSize + 'px' }">{{ log.message }}</pre>
             </div>
           </div>
-          <input class="cli-input" type="text" v-model="command">
-        </form>
+        </div>
       </div>
     </div>
     <script src="./js/vue.min.js"></script>
@@ -57,10 +56,9 @@
           shortcuts: [
             { label: 'remove all containers', command: 'docker ps -aq | xargs docker rm -f', color: 'red'},
             { label: 'containers', command: 'docker ps -a', color: 'black'},
-            // { label: 'images', command: 'docker images', color: 'black'},
-            // { label: 'networks', command: 'docker network ls', color: 'black'},
-            // { label: 'volumes', command: 'docker volume ls', color: 'black'},
-            // { label: 'prune', command: 'docker system prune -f', color: 'red'}
+            { label: 'images', command: 'docker images', color: 'black'},
+            { label: 'networks', command: 'docker network ls', color: 'black'},
+            { label: 'volumes', command: 'docker volume ls', color: 'black'},
           ],
           logs: []
         },
@@ -77,10 +75,6 @@
                 cliLogs.scrollTop = cliLogs.scrollHeight
               })
             })
-
-            window.api.on('clear', (event) => {
-              this.clear()
-            })
           },
           sendCommand (command) {
             if (store.autoClear) {
@@ -93,11 +87,6 @@
           },
           clear () {
             this.logs = []
-          },
-          submitCommand (e) {
-            e.preventDefault()
-            this.sendCommand(this.command)
-            this.command = ''
           },
           saveSettings () {
             this.$store.commit('saveSettings')
