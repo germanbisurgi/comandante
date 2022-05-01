@@ -4,7 +4,6 @@ class Storage {
   }
 
   setItem (key, value) {
-    console.log('set', value)
     window.localStorage.setItem(key, JSON.stringify(value))
   }
 
