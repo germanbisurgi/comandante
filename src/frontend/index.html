@@ -17,6 +17,8 @@
           <input id="font-size" type="range" min="10" max="20" step="1" v-model="fontSize" @change="saveSettings">
           <label for="auto-clear">Auto Clear</label>
           <input id="auto-clear" type="checkbox" v-model="autoClear" @change="saveSettings">
+          <label for="auto-scroll">Auto Scroll</label>
+          <input id="auto-scroll" type="checkbox" v-model="autoScroll" @change="saveSettings">
         </nav>
         <div class="logs">
           <pre class="log" v-for="log in logs" :data-type="log.type" :style="{ fontSize: fontSize + 'px' }">{{ log.message }}</pre>
@@ -32,6 +34,7 @@
           storage: null,
           fontSize : 11,
           autoClear: true,
+          autoScroll: true,
           commands: [
             { label: 'remove all containers', command: 'docker ps -aq | xargs docker rm -f', color: 'red'},
             { label: 'containers', command: 'docker ps -a', color: 'black'},
@@ -53,7 +56,9 @@
             window.api.on('logs', (event, log) => {
               this.logs.push(log)
               requestAnimationFrame(() => {
-                logs.scrollTop = logs.scrollHeight
+                if (this.autoScroll) {
+                  logs.scrollTop = logs.scrollHeight
+                }
               })
             })
           },
@@ -72,10 +77,12 @@
           loadSettings () {
             this.fontSize = this.storage.getItem('font-size') ?? 11
             this.autoClear = this.storage.getItem('auto-clear') ?? true
+            this.autoScroll = this.storage.getItem('auto-scroll') ?? true
           },
           saveSettings () {
             this.storage.setItem('font-size', this.fontSize)
             this.storage.setItem('auto-clear', this.autoClear)
+            this.storage.setItem('auto-scroll', this.autoScroll)
           }
         }
       })
