@@ -37,6 +37,7 @@
           autoScroll: true,
           commands: [
             { label: 'remove all containers', command: 'docker ps -aq | xargs docker rm -f', color: 'red'},
+            { label: 'prune', command: 'docker system prune --force --volumes', color: 'red'},
             { label: 'containers', command: 'docker ps -a', color: 'black'},
             { label: 'images', command: 'docker images', color: 'black'},
             { label: 'networks', command: 'docker network ls', color: 'black'},
