@@ -2,33 +2,9 @@
 
 .sidenav {
   height: 100vh;
-  min-width: 150px;
-  max-width: 150px;
 }
 
-/* ------------------------------------------------------------------ buttons */
-
-.btn {
-  padding: 12px 6px;
-}
-
-.btn-block {
-  width: 100%;
-}
-
-/* ------------------------------------------------------------------- layout */
-
-.main {
-  height: 100vh;
-}
-
-/* -------------------------------------------------------------------- forms */
-
-textarea {
-  font-family: monospace;
-}
-
-/* ---------------------------------------------------------------------- cli */
+/* --------------------------------------------------------------------- logs */
 
 .logs {
   background: #000;
@@ -37,13 +13,14 @@ textarea {
   padding: 15px;
   width: 100%;
   height: 100%;
+
+  .log {
+    color: #fff;
+  }
+
+  .log[data-type="prompt"] {
+    color: #00ff41;
+    margin: 15px 0;
+  }
 }
 
-.log {
-  color: #fff;
-}
-
-.log[data-type="prompt"] {
-  color: #00ff41;
-  margin: 15px 0;
-}

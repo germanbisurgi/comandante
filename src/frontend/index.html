@@ -11,16 +11,29 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-2">
-            <nav class="sidenav">
-              <button class="btn btn-block" :style="{ color: command.color}" v-for="command in commands" @click="sendCommand(command.command)">{{ command.label }}</button>
-              <button class="btn btn-block" @click="abort()">Abort</button>
-              <button class="btn btn-block" @click="clear()">Clear</button>
-              <label for="font-size">Font Size</label>
-              <input id="font-size" type="range" min="10" max="20" step="1" v-model="fontSize" @change="saveSettings">
-              <label for="auto-clear">Auto Clear</label>
-              <input id="auto-clear" type="checkbox" v-model="autoClear" @change="saveSettings">
-              <label for="auto-scroll">Auto Scroll</label>
-              <input id="auto-scroll" type="checkbox" v-model="autoScroll" @change="saveSettings">
+            <nav class="sidenav d-grid gap-3">
+              <button class="btn btn-primary btn-block" v-for="command in commands" @click="sendCommand(command.command)">{{ command.label }}</button>
+              <button class="btn btn-primary btn-block" @click="abort()">Abort</button>
+              <button class="btn btn-primary btn-block" @click="clear()">Clear</button>
+
+              <div>
+                <label class="form-label" for="font-size">Font Size</label>
+                <input class="form-range" id="font-size" type="range" min="10" max="20" step="1" v-model="fontSize" @change="saveSettings">
+              </div>
+
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" id="auto-clear" type="checkbox" v-model="autoClear" @change="saveSettings">
+                  <span>Auto Clear</span>
+                </label>
+              </div>
+
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" id="auto-scroll" type="checkbox" v-model="autoScroll" @change="saveSettings">
+                  <span>Auto Scroll</span>
+                </label>
+              </div>
             </nav>
           </div>
           <div class="col-10">
@@ -42,12 +55,12 @@
           autoClear: true,
           autoScroll: true,
           commands: [
-            { label: 'remove all containers', command: 'docker ps -aq | xargs docker rm -f', color: 'red'},
-            { label: 'prune', command: 'docker system prune --force --volumes', color: 'red'},
-            { label: 'containers', command: 'docker ps -a', color: 'black'},
-            { label: 'images', command: 'docker images', color: 'black'},
-            { label: 'networks', command: 'docker network ls', color: 'black'},
-            { label: 'volumes', command: 'docker volume ls', color: 'black'},
+            { label: 'remove all containers', command: 'docker ps -aq | xargs docker rm -f'},
+            { label: 'prune', command: 'docker system prune --force --volumes'},
+            { label: 'containers', command: 'docker ps -a'},
+            { label: 'images', command: 'docker images'},
+            { label: 'networks', command: 'docker network ls'},
+            { label: 'volumes', command: 'docker volume ls'},
           ],
           logs: []
         },
