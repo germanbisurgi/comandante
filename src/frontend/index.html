@@ -8,20 +8,26 @@
   </head>
   <body>
     <div id="app">
-      <div class="container">
-        <nav class="sidenav">
-          <button class="btn btn-block" :style="{ color: command.color}" v-for="command in commands" @click="sendCommand(command.command)">{{ command.label }}</button>
-          <button class="btn btn-block" @click="abort()">Abort</button>
-          <button class="btn btn-block" @click="clear()">Clear</button>
-          <label for="font-size">Font Size</label>
-          <input id="font-size" type="range" min="10" max="20" step="1" v-model="fontSize" @change="saveSettings">
-          <label for="auto-clear">Auto Clear</label>
-          <input id="auto-clear" type="checkbox" v-model="autoClear" @change="saveSettings">
-          <label for="auto-scroll">Auto Scroll</label>
-          <input id="auto-scroll" type="checkbox" v-model="autoScroll" @change="saveSettings">
-        </nav>
-        <div class="logs">
-          <pre class="log" v-for="log in logs" :data-type="log.type" :style="{ fontSize: fontSize + 'px' }">{{ log.message }}</pre>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-2">
+            <nav class="sidenav">
+              <button class="btn btn-block" :style="{ color: command.color}" v-for="command in commands" @click="sendCommand(command.command)">{{ command.label }}</button>
+              <button class="btn btn-block" @click="abort()">Abort</button>
+              <button class="btn btn-block" @click="clear()">Clear</button>
+              <label for="font-size">Font Size</label>
+              <input id="font-size" type="range" min="10" max="20" step="1" v-model="fontSize" @change="saveSettings">
+              <label for="auto-clear">Auto Clear</label>
+              <input id="auto-clear" type="checkbox" v-model="autoClear" @change="saveSettings">
+              <label for="auto-scroll">Auto Scroll</label>
+              <input id="auto-scroll" type="checkbox" v-model="autoScroll" @change="saveSettings">
+            </nav>
+          </div>
+          <div class="col-10">
+            <div class="logs">
+              <pre class="log" v-for="log in logs" :data-type="log.type" :style="{ fontSize: fontSize + 'px' }">{{ log.message }}</pre>
+            </div>
+          </div>
         </div>
       </div>
     </div>

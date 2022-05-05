@@ -7809,10 +7809,6 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important; } }
 
-.container {
-  display: flex;
-  height: 100vh; }
-
 /* ------------------------------------------------------------------ sidenav */
 .sidenav {
   height: 100vh;

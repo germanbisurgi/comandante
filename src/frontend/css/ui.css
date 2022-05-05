@@ -1,49 +1,36 @@
 /* ------------------------------------------------------------------ sidenav */
-
 .sidenav {
   height: 100vh;
   min-width: 150px;
-  max-width: 150px;
-}
+  max-width: 150px; }
 
 /* ------------------------------------------------------------------ buttons */
-
 .btn {
-  padding: 12px 6px;
-}
+  padding: 12px 6px; }
 
 .btn-block {
-  width: 100%;
-}
+  width: 100%; }
 
 /* ------------------------------------------------------------------- layout */
-
 .main {
-  height: 100vh;
-}
+  height: 100vh; }
 
 /* -------------------------------------------------------------------- forms */
-
 textarea {
-  font-family: monospace;
-}
+  font-family: monospace; }
 
 /* ---------------------------------------------------------------------- cli */
-
 .logs {
   background: #000;
   color: #00ff41;
   overflow: auto;
   padding: 15px;
   width: 100%;
-  height: 100%;
-}
+  height: 100%; }
 
 .log {
-  color: #fff;
-}
+  color: #fff; }
 
 .log[data-type="prompt"] {
   color: #00ff41;
-  margin: 15px 0;
-}
+  margin: 15px 0; }
