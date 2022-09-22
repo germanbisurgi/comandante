@@ -1,111 +1,192 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
+<head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./css/main.css">
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline';" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline';"/>
     <title>Comandante</title>
-  </head>
-  <body>
-    <div id="app">
-      <div class="container-fluid">
+</head>
+<body>
+<div id="app">
+    <div class="container-fluid">
         <div class="row">
-          <div class="col-2">
-            <nav class="sidenav d-grid gap-3">
-              <button class="btn btn-primary btn-block" v-for="command in commands" @click="sendCommand(command.command)">{{ command.label }}</button>
-              <button class="btn btn-primary btn-block" @click="abort()">Abort</button>
-              <button class="btn btn-primary btn-block" @click="clear()">Clear</button>
+            <div class="col-2">
+                <nav class="sidenav d-grid gap-2">
+                    <button class="btn btn-primary btn-block" v-for="command in commands" @click="sendCommand(command.command)">{{ command.label }}</button>
+                    <button class="btn btn-primary btn-block" @click="abort()">Abort</button>
+                    <button class="btn btn-primary btn-block" @click="clear()">Clear</button>
 
-              <div>
-                <label class="form-label" for="font-size">Font Size</label>
-                <input class="form-range" id="font-size" type="range" min="10" max="20" step="1" v-model="fontSize" @change="saveSettings">
-              </div>
+                    <div>
+                        <label class="form-label" for="font-size">Font Size</label>
+                        <input class="form-range" id="font-size" type="range" min="10" max="20" step="1" v-model="fontSize" @change="saveSettings">
+                    </div>
 
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input class="form-check-input" id="auto-clear" type="checkbox" v-model="autoClear" @change="saveSettings">
-                  <span>Auto Clear</span>
-                </label>
-              </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" id="auto-clear" type="checkbox" v-model="autoClear" @change="saveSettings">
+                            <span>Auto Clear</span>
+                        </label>
+                    </div>
 
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input class="form-check-input" id="auto-scroll" type="checkbox" v-model="autoScroll" @change="saveSettings">
-                  <span>Auto Scroll</span>
-                </label>
-              </div>
-            </nav>
-          </div>
-          <div class="col-10">
-            <div class="logs">
-              <pre class="log" v-for="log in logs" :data-type="log.type" :style="{ fontSize: fontSize + 'px' }">{{ log.message }}</pre>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" id="auto-scroll" type="checkbox" v-model="autoScroll" @change="saveSettings">
+                            <span>Auto Scroll</span>
+                        </label>
+                    </div>
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Settings</button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="settings-container"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </nav>
             </div>
-          </div>
+            <div class="col-10">
+                <div class="logs">
+                    <pre class="log" v-for="log in logs" :data-type="log.type" :style="{ fontSize: fontSize + 'px' }">{{ log.message }}</pre>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-    <script src="./js/vue.min.js"></script>
-    <script src="./js/storage.js"></script>
-    <script>
-      new Vue({
-        el: '#app',
-        data: {
-          storage: null,
-          fontSize : 11,
-          autoClear: true,
-          autoScroll: true,
-          commands: [
-            { label: 'remove all containers', command: 'docker ps -aq | xargs docker rm -f'},
-            { label: 'prune', command: 'docker system prune --force --volumes'},
-            { label: 'containers', command: 'docker ps -a'},
-            { label: 'images', command: 'docker images'},
-            { label: 'networks', command: 'docker network ls'},
-            { label: 'volumes', command: 'docker volume ls'},
-          ],
-          logs: []
-        },
-        mounted() {
-          this.storage = new Storage()
-          this.loadSettings()
-          this.registerEvents()
-        },
-        methods: {
-          registerEvents () {
-            const logs = document.querySelector('.logs')
-
-            window.api.on('logs', (event, log) => {
-              this.logs.push(log)
-              requestAnimationFrame(() => {
-                if (this.autoScroll) {
-                  logs.scrollTop = logs.scrollHeight
-                }
-              })
-            })
-          },
-          sendCommand (command) {
-            if (this.autoClear) {
-              this.clear()
-            }
-            window.api.send('command', command)
-          },
-          abort () {
-            window.api.send('abort')
-          },
-          clear () {
-            this.logs = []
-          },
-          loadSettings () {
-            this.fontSize = this.storage.getItem('font-size') ?? 11
-            this.autoClear = this.storage.getItem('auto-clear') ?? true
-            this.autoScroll = this.storage.getItem('auto-scroll') ?? true
-          },
-          saveSettings () {
-            this.storage.setItem('font-size', this.fontSize)
-            this.storage.setItem('auto-clear', this.autoClear)
-            this.storage.setItem('auto-scroll', this.autoScroll)
-          }
+</div>
+<script src="./js/popper.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/jedi.js"></script>
+<script src="./js/vue.min.js"></script>
+<script src="./js/storage.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      storage: null,
+      fontSize: 11,
+      autoClear: true,
+      autoScroll: true,
+      defaults: [
+        {label: 'remove all containers', command: 'docker ps -aq | xargs docker rm -f'},
+        {label: 'prune', command: 'docker system prune --force --volumes'},
+        {label: 'containers', command: 'docker ps -a'},
+        {label: 'images', command: 'docker images'},
+        {label: 'networks', command: 'docker network ls'},
+        {label: 'volumes', command: 'docker volume ls'},
+      ],
+      commands: [],
+      logs: []
+    },
+    mounted() {
+      this.storage = new Storage()
+      this.loadSettings()
+      this.registerEvents()
+      this.initSettingsEditor()
+    },
+    methods: {
+      initSettingsEditor() {
+        if (this.settingsEditor) {
+          this.settingsEditor.destroy()
         }
-      })
-    </script>
-  </body>
+
+        this.settingsEditor = new Jedi({
+          container: '#settings-container',
+          removeProperty: false,
+          addProperty: false,
+          debug: false,
+          showErrors: 'always',
+          schema: {
+            "type": "array",
+            "title": "commands",
+            "default": this.defaults,
+            "items": {
+              "type": "object",
+              "title": "Command",
+              "options": {
+                "hideTitle": true
+              },
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "title": "Label"
+                },
+                "command": {
+                  "type": "string",
+                  "title": "Command"
+                },
+                "color": {
+                  "type": "string",
+                  "title": "Color",
+                  "enum": [
+                    "primary",
+                    "warning",
+                    "danger"
+                  ]
+                }
+              }
+            }
+          }
+        })
+
+        this.settingsEditor.events.on('change', () => {
+          console.log('settingsEditor change', this.settingsEditor.getValue())
+          this.commands = this.settingsEditor.getValue()
+        })
+
+        this.settingsEditor.events.on('ready', () => {
+          console.log('settingsEditor ready')
+        })
+      },
+      registerEvents() {
+        const logs = document.querySelector('.logs')
+
+        window.api.on('logs', (event, log) => {
+          this.logs.push(log)
+          requestAnimationFrame(() => {
+            if (this.autoScroll) {
+              logs.scrollTop = logs.scrollHeight
+            }
+          })
+        })
+      },
+      sendCommand(command) {
+        if (this.autoClear) {
+          this.clear()
+        }
+        window.api.send('command', command)
+      },
+      abort() {
+        window.api.send('abort')
+      },
+      clear() {
+        this.logs = []
+      },
+      loadSettings() {
+        this.fontSize = this.storage.getItem('font-size') ?? 11
+        this.autoClear = this.storage.getItem('auto-clear') ?? true
+        this.autoScroll = this.storage.getItem('auto-scroll') ?? true
+      },
+      saveSettings() {
+        this.storage.setItem('font-size', this.fontSize)
+        this.storage.setItem('auto-clear', this.autoClear)
+        this.storage.setItem('auto-scroll', this.autoScroll)
+      }
+    }
+  })
+</script>
+</body>
 </html>
