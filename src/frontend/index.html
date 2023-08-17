@@ -83,6 +83,7 @@
       defaults: [
         {label: 'remove all containers', command: 'docker ps -aq | xargs docker rm -f'},
         {label: 'prune', command: 'docker system prune --force --volumes'},
+        {label: 'prune old images (1y)', command: 'docker image prune -a --force --filter "until=8760h"'},
         {label: 'containers', command: 'docker ps -a'},
         {label: 'images', command: 'docker images'},
         {label: 'networks', command: 'docker network ls'},
