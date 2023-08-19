@@ -1,71 +1,71 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="./css/main.css">
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline';"/>
-    <title>Comandante</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./css/main.css">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline';"/>
+  <title>Comandante</title>
 </head>
 <body>
 <div id="app">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-2">
-                <nav class="sidenav d-grid gap-2">
-                    <button class="btn btn-primary btn-block" v-for="command in commands" @click="sendCommand(command.command)">{{ command.label }}</button>
-                    <button class="btn btn-primary btn-block" @click="abort()">Abort</button>
-                    <button class="btn btn-primary btn-block" @click="clear()">Clear</button>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2">
+        <nav class="sidenav d-flex flex-column gap-2">
+          <button class="btn btn-primary btn-sm btn-block" :class="command.class" v-for="command in commands" @click="sendCommand(command.command)">{{ command.label }}</button>
+          <button class="btn btn-secondary btn-sm btn-block" @click="abort()">Abort</button>
+          <button class="btn btn-secondary btn-sm btn-block" @click="clear()">Clear</button>
 
-                    <div>
-                        <label class="form-label" for="font-size">Font Size</label>
-                        <input class="form-range" id="font-size" type="range" min="10" max="20" step="1" v-model="fontSize" @change="saveSettings">
-                    </div>
+          <div>
+            <label class="form-label" for="font-size">Font Size</label>
+            <input class="form-range" id="font-size" type="range" min="10" max="20" step="1" v-model="fontSize" @change="saveSettings">
+          </div>
 
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" id="auto-clear" type="checkbox" v-model="autoClear" @change="saveSettings">
-                            <span>Auto Clear</span>
-                        </label>
-                    </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" id="auto-clear" type="checkbox" v-model="autoClear" @change="saveSettings">
+              <span>Auto Clear</span>
+            </label>
+          </div>
 
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" id="auto-scroll" type="checkbox" v-model="autoScroll" @change="saveSettings">
-                            <span>Auto Scroll</span>
-                        </label>
-                    </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" id="auto-scroll" type="checkbox" v-model="autoScroll" @change="saveSettings">
+              <span>Auto Scroll</span>
+            </label>
+          </div>
 
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Settings</button>
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Settings</button>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div id="settings-container"></div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </nav>
-            </div>
-            <div class="col-10">
-                <div class="logs">
-                    <pre class="log" v-for="log in logs" :data-type="log.type" :style="{ fontSize: fontSize + 'px' }">{{ log.message }}</pre>
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body">
+                  <div id="settings-container"></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="saveSettings">Save changes</button>
+                </div>
+              </div>
             </div>
+          </div>
+
+        </nav>
+      </div>
+      <div class="col-10">
+        <div class="logs">
+          <pre class="log" v-for="log in logs" :data-type="log.type" :style="{ fontSize: fontSize + 'px' }">{{ log.message }}</pre>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 <script src="./js/popper.min.js"></script>
 <script src="./js/bootstrap.min.js"></script>
@@ -81,16 +81,23 @@
       autoClear: true,
       autoScroll: true,
       defaults: [
-        {label: 'remove all containers', command: 'docker ps -aq | xargs docker rm -f'},
-        {label: 'prune', command: 'docker system prune --force --volumes'},
-        {label: 'prune old images (1y)', command: 'docker image prune -a --force --filter "until=8760h"'},
-        {label: 'containers', command: 'docker ps -a'},
-        {label: 'images', command: 'docker images'},
-        {label: 'networks', command: 'docker network ls'},
-        {label: 'volumes', command: 'docker volume ls'},
+        {class: 'btn-danger', label: 'Remove all containers', command: 'docker ps -aq | xargs docker rm -f'},
+        {
+          class: 'btn-danger',
+          label: 'Prune 1 year old images',
+          command: 'docker image prune -a --force --filter "until=8760h"'
+        },
+        {class: 'btn-warning', label: 'Prune (soft)', command: 'docker system prune --force --volumes'},
+        {class: 'btn-primary', label: 'Containers', command: 'docker ps -a'},
+        {class: 'btn-primary', label: 'Images', command: 'docker images'},
+        {class: 'btn-primary', label: 'Networks', command: 'docker network ls'},
+        {class: 'btn-primary', label: 'Volumes', command: 'docker volume ls'},
       ],
       commands: [],
       logs: []
+    },
+    created() {
+      this.commands = this.defaults
     },
     mounted() {
       this.storage = new Storage()
@@ -105,22 +112,33 @@
         }
 
         this.settingsEditor = new Jedi({
-          container: '#settings-container',
-          removeProperty: false,
-          addProperty: false,
-          debug: false,
-          showErrors: 'always',
+          container: document.querySelector('#settings-container'),
+          isEditor: true,
+          theme: 'bootstrap5',
           schema: {
             "type": "array",
-            "title": "commands",
-            "default": this.defaults,
+            "format": "nav",
+            "title": "Commands",
+            "default": this.commands,
+            "options": {
+              "itemTemplate": "{{ i1 }}) {{ value.label }}"
+            },
             "items": {
               "type": "object",
               "title": "Command",
-              "options": {
-                "hideTitle": true
-              },
               "properties": {
+                "class": {
+                  "type": "string",
+                  "title": "Class",
+                  "enum": [
+                    "btn-default",
+                    "btn-primary",
+                    "btn-info",
+                    "btn-success",
+                    "btn-warning",
+                    "btn-danger"
+                  ]
+                },
                 "label": {
                   "type": "string",
                   "title": "Label"
@@ -128,28 +146,10 @@
                 "command": {
                   "type": "string",
                   "title": "Command"
-                },
-                "color": {
-                  "type": "string",
-                  "title": "Color",
-                  "enum": [
-                    "primary",
-                    "warning",
-                    "danger"
-                  ]
                 }
               }
             }
           }
-        })
-
-        this.settingsEditor.events.on('change', () => {
-          console.log('settingsEditor change', this.settingsEditor.getValue())
-          this.commands = this.settingsEditor.getValue()
-        })
-
-        this.settingsEditor.events.on('ready', () => {
-          console.log('settingsEditor ready')
         })
       },
       registerEvents() {
@@ -177,11 +177,14 @@
         this.logs = []
       },
       loadSettings() {
+        this.commands = this.storage.getItem('commands') ?? this.defaults
         this.fontSize = this.storage.getItem('font-size') ?? 11
         this.autoClear = this.storage.getItem('auto-clear') ?? true
         this.autoScroll = this.storage.getItem('auto-scroll') ?? true
       },
       saveSettings() {
+        this.commands = this.settingsEditor.getValue()
+        this.storage.setItem('commands', this.commands)
         this.storage.setItem('font-size', this.fontSize)
         this.storage.setItem('auto-clear', this.autoClear)
         this.storage.setItem('auto-scroll', this.autoScroll)
