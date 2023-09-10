@@ -13,6 +13,7 @@
   width: 100%;
   height: calc(100vh - 30px); }
   .logs .log {
+    overflow: initial;
     width: 100%;
     color: #fff; }
   .logs .log[data-type="prompt"] {

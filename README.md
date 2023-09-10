@@ -2,11 +2,16 @@
 
 Execute command line commands through an Electron based UI.
 
-## Installation and Starting for development
+## Install dependencies
 
 ```
-yarn install
-yarn start
+yarn
+```
+
+## Start for development
+
+```
+yarn dev
 ```
 
 ## Build
@@ -31,8 +36,8 @@ Used as a look up folder for icons by electron-builder.
 
 ### The `bin` folder
 
-Precompiled binaries lives in the `bin` directory. It's contents will be copied at runtime into the native app when building for distribution. This is how this project works without out of the box withount leaving to the user the task of downloading dependencies. The paths to each binary will change from development and production.
+Precompiled binaries lives in the `bin` directory. It's contents will be copied at runtime into the native app when building for distribution. This is how this project works without out of the box without leaving to the user the task of downloading dependencies. The paths to each binary will change from development and production.
 
 ### The `dist` folder
 
-Where lectron-builder packaged and compiled apps are stored.
+Where electron-builder packaged and compiled apps are stored.
