@@ -1,43 +1,47 @@
 # Comandante
 
-Execute command line commands through an Electron based UI.
+Comandante is an Electron-based UI that allows you to execute command line commands with ease.
 
-## Install dependencies
+## Installation of Dependencies
 
-```
+To get started, simply run the following command to install the required dependencies using Yarn:
+
+```bash
 yarn
 ```
 
-## Start for development
+## Starting for Development
 
-```
+Launch the application in development mode with the following command:
+
+```bash
 yarn dev
 ```
 
-## Build
+## Building the Application
 
-This project uses [electron-builder](https://www.electron.build/) to package and build a ready for distribution Electron app for macOS, Windows and Linux.
+This project relies on [electron-builder](https://www.electron.build/) to package and create distributable Electron applications for macOS, Windows, and Linux.
 
-The configuration schema can be found in the package.json under the `"build"` key.
+You can find the configuration schema for electron-builder in the `package.json` file under the `"build"` key.
 
-Scrips were added to the package.json file to trigger the build processes:
+To initiate the build processes, utilize the provided scripts in the `package.json` file:
 
-```
+```bash
 yarn build-linux
 yarn build-mac
 yarn build-win
 ```
 
-*Important*: As electron-builder documentation says: Don’t expect that you can build app for all platforms on one platform. If your app has native dependency, it can be compiled only on the target platform.
+**Important Note:** According to the electron-builder documentation, it's crucial to understand that building an app for all platforms on a single platform may not be feasible. If your app relies on native dependencies, it can only be compiled on the target platform where it is intended to run.
 
-### The `build` folder
+### The `build` Folder
 
-Used as a look up folder for icons by electron-builder.
+This folder is employed as a lookup location for icons used by electron-builder during the build process.
 
-### The `bin` folder
+### The `bin` Folder
 
-Precompiled binaries lives in the `bin` directory. It's contents will be copied at runtime into the native app when building for distribution. This is how this project works without out of the box without leaving to the user the task of downloading dependencies. The paths to each binary will change from development and production.
+Inside the `bin` directory, you'll find precompiled binaries. During the distribution build process, these binaries are copied into the native app. This approach streamlines the project's functionality by eliminating the need for users to manually download dependencies. Keep in mind that the paths to each binary may differ between development and production environments.
 
-### The `dist` folder
+### The `dist` Folder
 
-Where electron-builder packaged and compiled apps are stored.
+The `dist` directory is where electron-builder stores the packaged and compiled versions of the application for distribution.
